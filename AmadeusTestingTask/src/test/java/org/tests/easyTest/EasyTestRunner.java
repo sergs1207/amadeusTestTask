@@ -32,24 +32,24 @@ public class EasyTestRunner {
        driver.quit();
 		}
 	
-//	@Test
-//	public void TestScenario1() throws IOException {
-//		RozetkaMainPage home = new RozetkaMainPage(driver);
-//		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
-//		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
-//		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-//		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
-//		
-//	}
-//	@Test
-//	public void TestScenario2() throws IOException {
-//		RozetkaMainPage home = new RozetkaMainPage(driver);
-//		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
-//		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
-//		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-//		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
-//		
-//	}
+	@Test
+	public void TestScenario1() throws IOException {
+		RozetkaMainPage home = new RozetkaMainPage(driver);
+		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
+		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
+		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
+		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
+		
+	}
+	@Test
+	public void TestScenario2() throws IOException {
+		RozetkaMainPage home = new RozetkaMainPage(driver);
+		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
+		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
+		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
+		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
+		
+	}
 	@Test
 	public void TestScenario3() throws IOException {
 		RozetkaMainPage home = new RozetkaMainPage(driver);
