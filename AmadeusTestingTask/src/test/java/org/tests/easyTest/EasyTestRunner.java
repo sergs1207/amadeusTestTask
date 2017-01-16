@@ -1,5 +1,6 @@
 package org.tests.easyTest;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -13,6 +14,8 @@ import org.tests.easy.*;
 public class EasyTestRunner {
 	
 	private WebDriver driver;
+    private String outputFile = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/listAllModelNamesTask1.txt";
+
 	
 	
 	@Before
@@ -20,7 +23,7 @@ public class EasyTestRunner {
        String driverPath = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/geckodriver";
 		System.setProperty("webdriver.gecko.driver", driverPath);
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.MILLISECONDS);
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 		driver.get("http://rozetka.com.ua");
 		driver.manage().window().maximize();
 		}
@@ -30,12 +33,12 @@ public class EasyTestRunner {
 		}
 	
 	@Test
-	public void testProfileUserName() {
+	public void testProfileUserName() throws IOException {
 		RozetkaMainPage home = new RozetkaMainPage(driver);
 		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
 		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
 		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-		smartphonePage.getFileList();
-		//smartphonePage.
+		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
+		
 	}
 }

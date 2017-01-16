@@ -35,7 +35,7 @@ public class MiddleTestRunner {
 		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
 		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
 		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-		smartphonePage.getFileList();
+		//smartphonePage.getFileList();
 		//smartphonePage.
 	}
 }
