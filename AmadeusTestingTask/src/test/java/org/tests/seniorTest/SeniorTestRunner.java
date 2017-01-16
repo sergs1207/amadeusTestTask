@@ -1,4 +1,4 @@
-package org.tests.easyTest;
+package org.tests.seniorTest;
 
 import java.util.concurrent.TimeUnit;
 import org.junit.*;
@@ -10,7 +10,7 @@ import org.tests.easy.*;
 
 
 
-public class TestRunner {
+public class SeniorTestRunner {
 	
 	private WebDriver driver;
 	
