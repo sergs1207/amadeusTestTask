@@ -1,4 +1,4 @@
-package org.tests.easyTest;
+package org.tests.easy;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
