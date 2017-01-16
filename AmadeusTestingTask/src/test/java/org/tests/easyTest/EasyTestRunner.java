@@ -32,26 +32,8 @@ public class EasyTestRunner {
        driver.quit();
 		}
 	
-	@Test
-	public void TestScenario1() throws IOException {
-		RozetkaMainPage home = new RozetkaMainPage(driver);
-		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
-		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
-		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
-		
-	}
-	@Test
-	public void TestScenario2() throws IOException {
-		RozetkaMainPage home = new RozetkaMainPage(driver);
-		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
-		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
-		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB("h04.hvosting.ua:3306", "testclub", "testclub","testclub");
-		
-	}
 //	@Test
-//	public void TestScenario3() throws IOException {
+//	public void TestScenario1() throws IOException {
 //		RozetkaMainPage home = new RozetkaMainPage(driver);
 //		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
 //		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
@@ -59,4 +41,25 @@ public class EasyTestRunner {
 //		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
 //		
 //	}
+//	@Test
+//	public void TestScenario2() throws IOException {
+//		RozetkaMainPage home = new RozetkaMainPage(driver);
+//		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
+//		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
+//		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
+//		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
+//		
+//	}
+	@Test
+	public void TestScenario3() throws IOException {
+		RozetkaMainPage home = new RozetkaMainPage(driver);
+		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
+		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
+		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
+		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
+		smartphonePage.extractDataFromDBSendEmailReportPeriodically("sergs1207@gmail.com");
+		
+
+		
+	}
 }

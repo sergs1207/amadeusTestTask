@@ -19,7 +19,7 @@ public class RozetkaTelephonePage {
 		driver.findElement(By.xpath(".//*[@id='menu_categories_left']/li[1]/h4/a")).click();
 	
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@id='page2']/a")));
-		System.out.println("Page 3 is loaded and ready to be returned");
+		System.out.println("DEBUG - Page 3 is loaded and ready to be returned");
 		return new RozetkaSmartphonePage(driver);
 	}
 

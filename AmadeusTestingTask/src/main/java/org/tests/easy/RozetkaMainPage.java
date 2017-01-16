@@ -20,7 +20,7 @@ public class RozetkaMainPage {
 		driver.findElement(By.xpath("//*[@id='3361']/a")).click();
 
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@id='menu_categories_left']/li[1]/h4/a")));
-		System.out.println("Page 1 is loaded and ready to be returned");
+		System.out.println("DEBUG - Page 1 is loaded and ready to be returned");
 		return new RozetkaTVTelephoneSmartphonePage(driver);
 	}
 

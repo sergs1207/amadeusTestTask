@@ -14,30 +14,45 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 public class RozetkaSmartphonePage {
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static final String DB_URL = "jdbc:mysql://h04.hvosting.ua/testclub";
+	static final String USER = "testclub";
+	static final String PASS = "testclub";
+
 	private WebDriver driver;
+
 	public RozetkaSmartphonePage(WebDriver driver) {
 		this.driver = driver;
 	}
 
-
 	private String showReportTestCase1(String source) {
-		// output to file
 		String firstRun = generateContent(source, "GTMEventsData.setGoodsData( ", "rozetkaEvents.setGoods");
 		String secondRun = generateContent(firstRun, ", title:'", "', paren");
-
 		return secondRun;
 	}
 
 	private void showReportTestCase2(String source) {
-		// output to DB
-
 		generateContentAndPopulateDB(source, "GTMEventsData.setGoodsData( ", "rozetkaEvents.setGoods");
-
 	}
 
 	private void generateContentAndPopulateDB(String pageContent, String startPhrase, String endPhrase) {
+
+		Connection conn = null;
+		Statement stmt = null;
 
 		ArrayList<Integer> arrayOfGoodsStartIndex = new ArrayList<Integer>();
 		ArrayList<Integer> arrayOfGoodsEndIndex = new ArrayList<Integer>();
@@ -52,22 +67,54 @@ public class RozetkaSmartphonePage {
 
 		}
 		// OPEN CONNECTION TO DB
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
 
-		for (int i = 0; i < arrayOfGoodsEndIndex.size(); i++) {
-			String tempTitle = "";
-			String tempPrice = "";
-			String tempTag = "";
-			
-			arrayOfJSON.add(pageContent.substring(arrayOfGoodsStartIndex.get(i), arrayOfGoodsEndIndex.get(i)));
-			tempTag = getStringFieldValueFromJSON(": '","'","tag", arrayOfJSON.get(i));
-			
-			if (tempTag.equals("popularity")) {
-				tempTitle = getStringFieldValueFromJSON(":'", "',", "title", arrayOfJSON.get(i));
-				tempPrice = getStringFieldValueFromJSON(":'", "',", "price_usd", arrayOfJSON.get(i));
-				System.out.println(tempTitle + " - " + tempPrice + " - " + tempTag);
-				// INSERT INTO DB this row
+			// STEP 3: Open a connection
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Execute a query
+			stmt = conn.createStatement();
+
+			// PLACE YOUR INSERTS HERE
+			for (int i = 0; i < arrayOfGoodsEndIndex.size(); i++) {
+				String tempTitle = "";
+				String tempPrice = "";
+				String tempTag = "";
+				String sql = "";
+				arrayOfJSON.add(pageContent.substring(arrayOfGoodsStartIndex.get(i), arrayOfGoodsEndIndex.get(i)));
+				tempTag = getStringFieldValueFromJSON(": '", "'", "tag", arrayOfJSON.get(i));
+
+				if (tempTag.equals("popularity")) {
+					tempTitle = getStringFieldValueFromJSON(":'", "',", "title", arrayOfJSON.get(i));
+					tempPrice = getStringFieldValueFromJSON(":'", "',", "price_usd", arrayOfJSON.get(i));
+
+					sql = "INSERT INTO titleandprice VALUES ('" + tempTitle + "', '" + tempPrice + "')";
+					System.out.println(sql);
+					stmt.executeUpdate(sql);
+				}
 			}
-		}
+
+		} catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					conn.close();
+			} catch (SQLException se) {
+			} // do nothing
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
 
 	}
 
@@ -120,16 +167,13 @@ public class RozetkaSmartphonePage {
 		return sourceOfJSON.substring(startIndex, endIndex);
 
 	}
-	public RozetkaSmartphonePage() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public void putFirstSecondThirdPageItemsNamesToFile(String fileName) throws IOException {
 		FileWriter fw = new FileWriter(fileName);
 
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 
-		System.out.println("Page 4 is loaded and ready to grab results");
+		System.out.println("DEBUG - Page 4 is loaded and ready to grab results");
 		System.out.println(showReportTestCase1(driver.getPageSource()));
 		fw.write(showReportTestCase1(driver.getPageSource()));
 		// ;
@@ -146,11 +190,10 @@ public class RozetkaSmartphonePage {
 
 	}
 
-	public void putFirstSecondThirdPageTopSalesItemsNamesPricesToDB(String dbConnectionString, String dbName,
-			String dbPassword, String dbSchema) {
+	public void putFirstSecondThirdPageTopSalesItemsNamesPricesToDB() {
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 
-		System.out.println("Page 4 is loaded and ready to grab results");
+		System.out.println("DEBUG - Page 4 is loaded and ready to grab results");
 		showReportTestCase2(driver.getPageSource());
 
 		// ;
@@ -164,18 +207,92 @@ public class RozetkaSmartphonePage {
 
 	}
 
-	
+	public void extractDataFromDBSendEmailReportPeriodically(String emailForReports) {
 
-	 public static void main(String [] args){
-	 RozetkaSmartphonePage myInstance = new RozetkaSmartphonePage();
-	 System.out.println(myInstance.getStringFieldValueFromJSON(": ",",","id", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-	 System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","title", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-	 System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","price_usd_raw", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-	 System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","price_usd", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-	 System.out.println(myInstance.getStringFieldValueFromJSON(":"," ,","top_parent_id", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-	 System.out.println(myInstance.getStringFieldValueFromJSON(": '","'","tag", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-	   	
+		Connection conn = null;
+		Statement stmt = null;
+		String emailBody = "";
+
+		
+		try {
+			
+			Class.forName("com.mysql.jdbc.Driver");
+
+			
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		
+			stmt = conn.createStatement();
+
+			String sql = "SELECT * FROM titleandprice";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				String title = rs.getString("title");
+				String price = rs.getString("price");
+
+				emailBody += "Title: " + title + ", Price: " + price + "\n";
+
+			}
+			rs.close();
+
+		} catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					conn.close();
+			} catch (SQLException se) {
+			} // do nothing
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		// END OPEN CONNECTION TO DB
+		// SEND E_MAIL WITH REPORT
+
+		final String username = "enigma.in.my.heart@gmail.com";
+		final String password = "incorporated";
+
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+
+		try {
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailForReports));
+			message.setSubject("Report on data extraction from database");
+			message.setText("Dear Tester," + "\n\n PLease find report attached!\n" + emailBody);
+
+			Transport.send(message);
+
+			
+
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+
+		
+
+	}
+
 	
-	 }
 
 }
