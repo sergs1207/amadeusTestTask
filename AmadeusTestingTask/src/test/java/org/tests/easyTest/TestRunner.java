@@ -17,7 +17,7 @@ public class TestRunner {
 	
 	@Before
 	public void startTesting() throws Exception{
-       String driverPath = "/Users/sergiimaksiuta/Documents/workspace/AmadeusTestingTask/driver/geckodriver";
+       String driverPath = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/geckodriver";
 		System.setProperty("webdriver.gecko.driver", driverPath);
 		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.MILLISECONDS);
