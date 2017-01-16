@@ -17,6 +17,10 @@ import java.io.OutputStreamWriter;
 
 public class RozetkaSmartphonePage {
 	private WebDriver driver;
+	public RozetkaSmartphonePage(WebDriver driver) {
+		this.driver = driver;
+	}
+
 
 	private String showReportTestCase1(String source) {
 		// output to file
@@ -92,10 +96,30 @@ public class RozetkaSmartphonePage {
 
 	}
 
-	public RozetkaSmartphonePage(WebDriver driver) {
-		this.driver = driver;
-	}
+	public String getStringFieldValueFromJSON(String delimiter, String endSymbol, String myTag, String sourceOfJSON) {
+		myTag += delimiter;
+		int startIndex = 0, endIndex = 0;
 
+		for (int i = 0; i < sourceOfJSON.length() - myTag.length(); i++) {
+
+			if (sourceOfJSON.substring(i, i + myTag.length()).equals(myTag)) {
+				startIndex = i + myTag.length();
+
+			}
+		}
+
+		for (int i = startIndex + 1; i < sourceOfJSON.length() - endSymbol.length(); i++) {
+
+			if (sourceOfJSON.substring(i, i + endSymbol.length()).equals(endSymbol)) {
+				endIndex = i;
+
+				break;
+			}
+		}
+
+		return sourceOfJSON.substring(startIndex, endIndex);
+
+	}
 	public RozetkaSmartphonePage() {
 		// TODO Auto-generated constructor stub
 	}
@@ -140,30 +164,7 @@ public class RozetkaSmartphonePage {
 
 	}
 
-	public String getStringFieldValueFromJSON(String delimiter, String endSymbol, String myTag, String sourceOfJSON) {
-		myTag += delimiter;
-		int startIndex = 0, endIndex = 0;
-
-		for (int i = 0; i < sourceOfJSON.length() - myTag.length(); i++) {
-
-			if (sourceOfJSON.substring(i, i + myTag.length()).equals(myTag)) {
-				startIndex = i + myTag.length();
-
-			}
-		}
-
-		for (int i = startIndex + 1; i < sourceOfJSON.length() - endSymbol.length(); i++) {
-
-			if (sourceOfJSON.substring(i, i + endSymbol.length()).equals(endSymbol)) {
-				endIndex = i;
-
-				break;
-			}
-		}
-
-		return sourceOfJSON.substring(startIndex, endIndex);
-
-	}
+	
 
 	 public static void main(String [] args){
 	 RozetkaSmartphonePage myInstance = new RozetkaSmartphonePage();
