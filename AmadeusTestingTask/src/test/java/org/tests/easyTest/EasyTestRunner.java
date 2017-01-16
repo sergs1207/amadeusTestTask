@@ -26,7 +26,7 @@ public class EasyTestRunner {
 		}
 	@After
 	public void stopTesting() throws Exception{
-       //driver.quit();
+       driver.quit();
 		}
 	
 	@Test
