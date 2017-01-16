@@ -26,7 +26,7 @@ public class SeniorTestRunner {
 		}
 	@After
 	public void stopTesting() throws Exception{
-       //driver.quit();
+       driver.quit();
 		}
 	
 	@Test
