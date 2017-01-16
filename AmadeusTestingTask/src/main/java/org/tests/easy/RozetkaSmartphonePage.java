@@ -19,21 +19,21 @@ public class RozetkaSmartphonePage {
 	private WebDriver driver;
 
 	private String showReportTestCase1(String source) {
+		// output to file
 		String firstRun = generateContent(source, "GTMEventsData.setGoodsData( ", "rozetkaEvents.setGoods");
 		String secondRun = generateContent(firstRun, ", title:'", "', paren");
 
 		return secondRun;
 	}
-	private String showReportTestCase2(String source) {
-		String firstRun = generateContent(source, "GTMEventsData.setGoodsData( ", "rozetkaEvents.setGoods");
-		String secondRun = generateContentAndPopulateDB(firstRun, ", title:'", "', paren");
 
-		return secondRun;
+	private void showReportTestCase2(String source) {
+		// output to DB
+
+		generateContentAndPopulateDB(source, "GTMEventsData.setGoodsData( ", "rozetkaEvents.setGoods");
+
 	}
 
-
-	private String generateContentAndPopulateDB(String pageContent, String startPhrase, String endPhrase) {
-		String newPageContent = "";
+	private void generateContentAndPopulateDB(String pageContent, String startPhrase, String endPhrase) {
 
 		ArrayList<Integer> arrayOfGoodsStartIndex = new ArrayList<Integer>();
 		ArrayList<Integer> arrayOfGoodsEndIndex = new ArrayList<Integer>();
@@ -47,16 +47,26 @@ public class RozetkaSmartphonePage {
 				arrayOfGoodsEndIndex.add(i);
 
 		}
-		for (int i = 0; i < arrayOfGoodsEndIndex.size(); i++) {
-			arrayOfJSON.add(pageContent.substring(arrayOfGoodsStartIndex.get(i), arrayOfGoodsEndIndex.get(i)));
+		// OPEN CONNECTION TO DB
 
-			newPageContent += arrayOfJSON.get(i) + "\n";
+		for (int i = 0; i < arrayOfGoodsEndIndex.size(); i++) {
+			String tempTitle = "";
+			String tempPrice = "";
+			String tempTag = "";
+			
+			arrayOfJSON.add(pageContent.substring(arrayOfGoodsStartIndex.get(i), arrayOfGoodsEndIndex.get(i)));
+			tempTag = getStringFieldValueFromJSON(": '","'","tag", arrayOfJSON.get(i));
+			
+			if (tempTag.equals("popularity")) {
+				tempTitle = getStringFieldValueFromJSON(":'", "',", "title", arrayOfJSON.get(i));
+				tempPrice = getStringFieldValueFromJSON(":'", "',", "price_usd", arrayOfJSON.get(i));
+				System.out.println(tempTitle + " - " + tempPrice + " - " + tempTag);
+				// INSERT INTO DB this row
+			}
 		}
 
-		return newPageContent;
-
 	}
-	
+
 	private String generateContent(String pageContent, String startPhrase, String endPhrase) {
 		String newPageContent = "";
 
@@ -92,7 +102,7 @@ public class RozetkaSmartphonePage {
 
 	public void putFirstSecondThirdPageItemsNamesToFile(String fileName) throws IOException {
 		FileWriter fw = new FileWriter(fileName);
-		
+
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 
 		System.out.println("Page 4 is loaded and ready to grab results");
@@ -111,66 +121,60 @@ public class RozetkaSmartphonePage {
 		fw.close();
 
 	}
-	public void putFirstSecondThirdPageTopSalesItemsNamesPricesToDB(String dbConnectionString, String dbName, String dbPassword, String dbSchema) {
+
+	public void putFirstSecondThirdPageTopSalesItemsNamesPricesToDB(String dbConnectionString, String dbName,
+			String dbPassword, String dbSchema) {
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 
 		System.out.println("Page 4 is loaded and ready to grab results");
-		System.out.println(showReportTestCase2(driver.getPageSource()));
-		
+		showReportTestCase2(driver.getPageSource());
+
 		// ;
 		driver.findElement(By.xpath(".//*[@id='page2']/a")).click();
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@id='page3']/a")));
-		System.out.println(showReportTestCase2(driver.getPageSource()));
-		
+		showReportTestCase2(driver.getPageSource());
 
 		driver.findElement(By.xpath(".//*[@id='page3']/a")).click();
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@id='page4']/a")));
-		System.out.println(showReportTestCase2(driver.getPageSource()));
-		
-		
-	}
-	public String getStringFieldValueFromJSON(String delimiter, String endSymbol, String myTag, String sourceOfJSON){
-		myTag+=delimiter;
-		int startIndex=0, endIndex=0; 
-		
-		
-		for(int i=0; i<sourceOfJSON.length()-myTag.length();i++){
-			
-			if (sourceOfJSON.substring(i, i+myTag.length()).equals(myTag)){
-				startIndex=i+myTag.length();
-				
-			}
-		}
-	
-		
-		for(int i = startIndex+1; i<sourceOfJSON.length()-endSymbol.length();i++){
-			
-			if (sourceOfJSON.substring(i, i+endSymbol.length()).equals(endSymbol)){
-					endIndex=i;
-					
-					break;
-				}
-			}
-		
-		
-			
-		return sourceOfJSON.substring(startIndex, endIndex);
-				
+		showReportTestCase2(driver.getPageSource());
+
 	}
 
+	public String getStringFieldValueFromJSON(String delimiter, String endSymbol, String myTag, String sourceOfJSON) {
+		myTag += delimiter;
+		int startIndex = 0, endIndex = 0;
+
+		for (int i = 0; i < sourceOfJSON.length() - myTag.length(); i++) {
+
+			if (sourceOfJSON.substring(i, i + myTag.length()).equals(myTag)) {
+				startIndex = i + myTag.length();
+
+			}
+		}
+
+		for (int i = startIndex + 1; i < sourceOfJSON.length() - endSymbol.length(); i++) {
+
+			if (sourceOfJSON.substring(i, i + endSymbol.length()).equals(endSymbol)) {
+				endIndex = i;
+
+				break;
+			}
+		}
+
+		return sourceOfJSON.substring(startIndex, endIndex);
+
+	}
+
+	 public static void main(String [] args){
+	 RozetkaSmartphonePage myInstance = new RozetkaSmartphonePage();
+	 System.out.println(myInstance.getStringFieldValueFromJSON(": ",",","id", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
+	 System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","title", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
+	 System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","price_usd_raw", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
+	 System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","price_usd", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
+	 System.out.println(myInstance.getStringFieldValueFromJSON(":"," ,","top_parent_id", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
+	 System.out.println(myInstance.getStringFieldValueFromJSON(": '","'","tag", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
+	   	
 	
-		
-//	public static void main(String [] args){
-//		RozetkaSmartphonePage myInstance = new RozetkaSmartphonePage();
-//		System.out.println(myInstance.getStringFieldValueFromJSON(": ",",","id", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-//		System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","title", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-//		System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","price_usd_raw", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-//		System.out.println(myInstance.getStringFieldValueFromJSON(":'","',","price_usd", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-//		System.out.println(myInstance.getStringFieldValueFromJSON(":"," ,","top_parent_id", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-//		System.out.println(myInstance.getStringFieldValueFromJSON(": '","'","tag", "{ id: 12049360, title:'Motorola Moto Z (XT1650-03) Lunar Gray', parent_id:80003, parent:'Мобильные телефоны', producer_id:22, producer:'Motorola', price_usd:'610', price_usd_raw:'610', merchant_id:'1', seller_id:'5', state:'new', state_group_context: 'only new', top_parent_id:80257 ,tag: 'action' }"));
-//		  
-//		
-//		
-//	}
+	 }
 
 }
