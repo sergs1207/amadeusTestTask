@@ -33,7 +33,25 @@ public class EasyTestRunner {
 		}
 	
 	@Test
-	public void testProfileUserName() throws IOException {
+	public void TestScenario1() throws IOException {
+		RozetkaMainPage home = new RozetkaMainPage(driver);
+		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
+		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
+		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
+		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
+		
+	}
+	@Test
+	public void TestScenario2() throws IOException {
+		RozetkaMainPage home = new RozetkaMainPage(driver);
+		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
+		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
+		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
+		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB("h04.hvosting.ua:3306", "testclub", "testclub","testclub");
+		
+	}
+	@Test
+	public void TestScenario3() throws IOException {
 		RozetkaMainPage home = new RozetkaMainPage(driver);
 		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
 		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
