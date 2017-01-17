@@ -11,7 +11,7 @@ import org.tests.easy.*;
 
 
 
-public class TestRunner {
+public class MyTestsRunningLocally {
 	
 	private WebDriver driver;
     private String outputFile = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/listAllModelNamesTask1.txt";
@@ -51,16 +51,5 @@ public class TestRunner {
 		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
 	
 	}
-	@Test
-	public void TestScenario3() throws IOException {
-		RozetkaMainPage home = new RozetkaMainPage(driver);
-		RozetkaTVTelephoneSmartphonePage tvTelephoneSmartphonePage = home.pressCategory1Link(); 
-		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
-		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
-		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
-		smartphonePage.extractDataFromDBSendEmailReportPeriodically("sergs1207@gmail.com");
-		
-
-		
-	}
+	
 }
