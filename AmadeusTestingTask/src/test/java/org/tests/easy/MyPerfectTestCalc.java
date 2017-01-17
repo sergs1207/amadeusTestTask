@@ -15,10 +15,14 @@ import static org.junit.Assume.assumeThat;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class TestCalc {
+public class MyPerfectTestCalc {
 	private WebDriver driver;
 	private String outputFile = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/listAllModelNamesTask1.txt";
-
+	
+	@AfterClass
+	public void stopTesting() throws Exception{
+       driver.quit();
+		}
 	@Before
 	public void createObject() throws Exception {
 
@@ -38,7 +42,7 @@ public class TestCalc {
 		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
 		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
 
-		driver.quit();
+		
 
 	}
 
