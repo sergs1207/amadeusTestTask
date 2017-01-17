@@ -15,7 +15,7 @@ import static org.junit.Assume.assumeThat;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class MyPerfectTestCalc {
+public class TestCalc {
 	private WebDriver driver;
 	private String outputFile = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/listAllModelNamesTask1.txt";
 	
