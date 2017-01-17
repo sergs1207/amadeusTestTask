@@ -19,10 +19,7 @@ public class TestCalc {
 	private WebDriver driver;
 	private String outputFile = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/listAllModelNamesTask1.txt";
 	
-	@AfterClass
-	public void stopTesting() throws Exception{
-       driver.quit();
-		}
+	
 	@Before
 	public void createObject() throws Exception {
 
