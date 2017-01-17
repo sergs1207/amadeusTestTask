@@ -11,7 +11,7 @@ import org.tests.easy.*;
 
 
 
-public class EasyTestRunner {
+public class TestRunner {
 	
 	private WebDriver driver;
     private String outputFile = "/Users/sergiimaksiuta/Documents/Repo/AmadeusTestingTask/AmadeusTestingTask/driver/listAllModelNamesTask1.txt";
