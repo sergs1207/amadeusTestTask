@@ -39,7 +39,7 @@ public class TestRunner {
 		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
 		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
 		smartphonePage.putFirstSecondThirdPageItemsNamesToFile(outputFile);
-		assertEquals("Can't divide by zero", "Can't divide by zero");
+
 		
 	}
 	@Test
@@ -49,7 +49,7 @@ public class TestRunner {
 		RozetkaTelephonePage telephonePage = tvTelephoneSmartphonePage.pressTelephoneLink();
 		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
 		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
-		assertEquals("Can't divide by zero", "Can't divide by zero");
+	
 	}
 	@Test
 	public void TestScenario3() throws IOException {
@@ -59,7 +59,7 @@ public class TestRunner {
 		RozetkaSmartphonePage smartphonePage = telephonePage.pressSmartphoneLink();
 		smartphonePage.putFirstSecondThirdPageTopSalesItemsNamesPricesToDB();
 		smartphonePage.extractDataFromDBSendEmailReportPeriodically("sergs1207@gmail.com");
-		assertEquals("Can't divide by zero", "Can't divide by zero");
+		
 
 		
 	}
